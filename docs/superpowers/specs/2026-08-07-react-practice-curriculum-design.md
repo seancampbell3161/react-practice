@@ -54,6 +54,7 @@ react-practice/
 - **Package manager:** npm (ships with Node, no global install needed, simplest default for independent per-app folders).
 - **Testing:** Vitest on both sides — React Testing Library on the frontend, supertest on the backend. Each app ships with `npm test` working out of the box in both `api/` and `web/`, and **one worked example test already written** as a pattern to learn from (see per-app sections below). Tests for the actual UI/features the user builds are part of the practice, not pre-written; each README suggests a concrete test worth attempting.
 - **Version control:** the repo is git-initialized by Claude. Each app's scaffold is committed separately so there's a clean history to look back on.
+- **Dev ports & CORS:** each app's `api/` runs on a fixed port (`400N`, e.g. app 1 → `4001`, app 2 → `4002`, app 3 → `4003`) and each `web/` runs on Vite's default (`5173`). Since frontend and backend run on different origins, the Express app enables `cors()` for local dev. Fixed ports (rather than the default Express `3000`) avoid collisions if two apps' backends happen to run at once.
 
 ## Curriculum Framing
 
