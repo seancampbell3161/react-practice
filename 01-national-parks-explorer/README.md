@@ -29,6 +29,8 @@ npm run dev   # http://localhost:5173
 
 ## API contract
 
+All endpoints are served from `http://localhost:4001` — since the frontend runs on a different origin (`5173`), fetch the full URL, e.g. `fetch('http://localhost:4001/api/parks')`. The API enables CORS for this.
+
 `GET /api/parks` → array of summaries:
 
 ```json
@@ -68,6 +70,6 @@ npm run dev   # http://localhost:5173
 
 ## Suggested test
 
-The API already has a worked-example test suite at `api/src/routes/parks.test.ts` — read it to see the pattern (supertest hitting the running Express app directly, no real server needed).
+The API already has a worked-example test suite at `api/src/routes/parks.test.ts` — read it to see the pattern (supertest hitting the running Express app directly, no real server needed). Run it with `npm test` from `api/`.
 
-For the frontend, try writing a test in `web/src/` using React Testing Library and Vitest that mocks `fetch` and asserts the component shows a loading state first, then renders the park list once the fetch resolves.
+For the frontend, try writing a test in `web/src/` using React Testing Library and Vitest that mocks `fetch` and asserts the component shows a loading state first, then renders the park list once the fetch resolves. Run it with `npm test` from `web/`.
