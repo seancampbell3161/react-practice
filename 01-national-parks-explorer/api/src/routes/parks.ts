@@ -12,3 +12,14 @@ parksRouter.get('/', (_req, res) => {
   }));
   res.json(summaries);
 });
+
+parksRouter.get('/:id', (req, res) => {
+  const park = PARKS.find((p) => p.id === req.params.id);
+
+  if (!park) {
+    res.status(404).json({ error: 'Park not found' });
+    return;
+  }
+
+  res.json(park);
+});

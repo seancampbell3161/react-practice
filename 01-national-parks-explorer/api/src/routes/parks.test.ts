@@ -18,3 +18,24 @@ describe('GET /api/parks', () => {
     expect(res.body[0]).not.toHaveProperty('description');
   });
 });
+
+describe('GET /api/parks/:id', () => {
+  it('returns full detail for a known park', async () => {
+    const res = await request(app).get('/api/parks/yellowstone');
+
+    expect(res.status).toBe(200);
+    expect(res.body).toMatchObject({
+      id: 'yellowstone',
+      name: expect.any(String),
+      description: expect.any(String),
+      activities: expect.any(Array),
+    });
+  });
+
+  it('returns 404 for an unknown park', async () => {
+    const res = await request(app).get('/api/parks/not-a-real-park');
+
+    expect(res.status).toBe(404);
+    expect(res.body).toMatchObject({ error: expect.any(String) });
+  });
+});
