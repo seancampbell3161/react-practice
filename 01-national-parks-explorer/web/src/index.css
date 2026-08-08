@@ -9,3 +9,15 @@ body {
   padding: 2rem;
   margin-inline: auto;
 }
+
+.clickable {
+    cursor: pointer;
+}
+
+.margin-bottom {
+    margin-bottom: 6px;
+}
+
+.error-text {
+    color: red;
+}

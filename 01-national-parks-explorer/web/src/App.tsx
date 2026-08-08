@@ -1,8 +1,12 @@
+import ParkList from "./ParkList";
+
 function App() {
+  const url = 'http://localhost:4001/api';
+  
   return (
     <main>
       <h1>National Parks Explorer</h1>
-      <p>Build me! The assignment is in the README.md one directory up.</p>
+      <ParkList url={url} />
     </main>
   );
 }
