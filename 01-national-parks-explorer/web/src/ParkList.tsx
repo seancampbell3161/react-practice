@@ -36,8 +36,7 @@ export default function ParkList({ url }) {
     <>
       {loading && <h2>Loading...</h2>}
       {errorMsg && <p className={'error-text'}>{errorMsg}</p>}
-      {!currentPark && <ul>{parkList}</ul>}
-      {currentPark && <ParkDetail url={url} id={currentPark} handleBack={resetPark} />}
+      {currentPark ? <ParkDetail url={url} id={currentPark} handleBack={resetPark} /> : <ul>{parkList}</ul>}
     </>
   );
 }
