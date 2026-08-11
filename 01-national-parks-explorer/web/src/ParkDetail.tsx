@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import type { ParkDetail } from "./models";
+import type { ParkDetailModel } from "./models";
 
 export default function ParkDetail({ url, id, handleBack }) {
-  const [park, setPark] = useState<ParkDetail | undefined>(undefined);
+  const [park, setPark] = useState<ParkDetailModel | undefined>(undefined);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {

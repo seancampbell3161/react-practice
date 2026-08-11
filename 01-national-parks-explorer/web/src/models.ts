@@ -5,7 +5,7 @@ export interface ParkSummary {
   tagline: string;
 }
 
-export interface ParkDetail extends ParkSummary {
+export interface ParkDetailModel extends ParkSummary {
   description: string;
   established: string;
   sizeAcres: number;
