@@ -17,6 +17,8 @@ export default function ParkList({ url }) {
     async function fetchParks() {
       try {
         const res = await fetch(url + '/parks');
+        if (!res.ok) throw new Error('Failed to load parks');
+        
         if (!ignore) {
           const parks = await res.json();
           setParks(parks);
@@ -51,7 +53,7 @@ export default function ParkList({ url }) {
   const filteredParks = parks.filter((p: ParkSummary) => p.name.toLowerCase().includes(userInput.toLowerCase()));
 
   const updateFavorite = (key: string) => {
-    const value = localStorage.getItem(key) === 'true';
+    const value = favorites[key];
     const updatedValue = !value;
 
     localStorage.setItem(key, updatedValue.toString());
