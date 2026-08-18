@@ -73,8 +73,8 @@ uv run pytest
                          the other four endpoints [user]
     tests/
       conftest.py        client fixture + autouse store reset      [Claude]
-      test_books.py      all five endpoints; only the GET-list
-                         test passes at scaffold time             [Claude]
+      test_books.py      all five endpoints; 11 fail and 2 pass
+                         at scaffold time                         [Claude]
   web/                   Vite + React + TS shell, react-router
                          installed, no routing code                [Claude]
   README.md              Part 1 (Python) + Part 2 (React)          [Claude]
@@ -175,10 +175,11 @@ The reset matters because the store is mutable for the first time in this curric
 a `DELETE` test would otherwise poison whatever runs after it. Tests are `async def`
 and await their requests, mirroring the handlers under test.
 
-`tests/test_books.py` covers, in roughly ten tests:
+`tests/test_books.py` covers, in thirteen tests:
 
-- `GET /api/books` returns the seeded list. **This is the one test passing at
-  scaffold time**, alongside the worked endpoint.
+- `GET /api/books` returns the seeded list, and a companion test asserting the
+  store is reset between tests. **These two are the only tests passing at scaffold
+  time**; the suite ships at exactly 11 failed, 2 passed.
 - `GET /api/books/{id}` for a known id, and 404 for an unknown one.
 - `POST /api/books` returns 201 with a server-generated id, and the created book
   then appears in `GET /api/books`.
