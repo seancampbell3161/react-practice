@@ -66,13 +66,24 @@ async def test_create_book_ignores_client_supplied_id(client: AsyncClient) -> No
 
 async def test_update_book_changes_only_provided_fields(client: AsyncClient) -> None:
     original = (await client.get("/api/books")).json()[0]
-    res = await client.put(f"/api/books/{original['id']}", json={"status": "read"})
+    assert original["status"] != "reading"
+
+    res = await client.put(f"/api/books/{original['id']}", json={"status": "reading"})
     assert res.status_code == 200
     body = res.json()
-    assert body["status"] == "read"
+    assert body["status"] == "reading"
     assert body["title"] == original["title"]
     assert body["author"] == original["author"]
     assert body["rating"] == original["rating"]
+
+    # The change has to survive the request that made it.
+    assert (await client.get(f"/api/books/{original['id']}")).json() == body
+
+    # An omitted field is left alone; an explicit null clears it.
+    cleared = await client.put(f"/api/books/{original['id']}", json={"rating": None})
+    assert cleared.status_code == 200
+    assert cleared.json()["rating"] is None
+    assert cleared.json()["status"] == "reading"
 
 
 async def test_update_book_unknown_id_returns_404(client: AsyncClient) -> None:

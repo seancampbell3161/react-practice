@@ -75,7 +75,9 @@ everything else is left alone. `PUT {"status": "read"}` changes the status and
 nothing else. This is what makes the frontend's inline status toggle a one-field
 request, and it is the interesting half of the exercise — look up
 `model_dump(exclude_unset=True)` and think about how pydantic tells "field
-absent" apart from "field explicitly null".
+absent" apart from "field explicitly null". Concretely: a field you omit keeps
+its current value, and a field you send as null is cleared — which is exactly
+the distinction `exclude_unset` preserves and `exclude_none` throws away.
 
 Validation is not your job to write. Declare the rules on the model and pydantic
 returns 422 on violations by itself.
