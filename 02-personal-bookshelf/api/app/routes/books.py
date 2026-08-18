@@ -1,7 +1,10 @@
-from fastapi import APIRouter
+import uuid
+
+from fastapi import APIRouter, status
+from fastapi.exceptions import HTTPException
 
 from app.data import BOOKS
-from app.models import Book
+from app.models import Book, BookCreate
 
 router = APIRouter()
 
@@ -18,13 +21,25 @@ async def list_books() -> list[Book]:
     return BOOKS
 
 
-# --- Your turn --------------------------------------------------------------
 # Implement the other four endpoints:
 #
 #   GET    /{book_id}   -> 200 Book, or 404
+@router.get("/{book_id}", response_model=Book)
+async def get_book(book_id: str) -> Book:
+    for book in BOOKS:
+        if book.id == book_id:
+            return book
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail="Book not found"
+    )
+
+    
 #   POST   ""           -> 201 Book, id generated server-side
+@router.post("", response_model=Book, status_code=status.HTTP_201_CREATED)
+async def create_book(req: BookCreate) -> Book:
+    new_book = Book(id=uuid.uuid4().hex, title=req.title, author=req.author, status=req.status, rating=req.rating)
+
+    return new_book
 #   PUT    /{book_id}   -> 200 Book, applying only the fields that were sent
 #   DELETE /{book_id}   -> 204 with an empty body, or 404
-#
-# README.md Part 1 has the full contract. tests/test_books.py is the spec -
-# run `uv run pytest` and work until it is green.
