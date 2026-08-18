@@ -1,0 +1,19 @@
+from collections.abc import AsyncIterator
+
+import pytest
+from httpx import ASGITransport, AsyncClient
+
+from app.data import reset_books
+from app.main import app
+
+
+@pytest.fixture(autouse=True)
+def fresh_books() -> None:
+    reset_books()
+
+
+@pytest.fixture
+async def client() -> AsyncIterator[AsyncClient]:
+    transport = ASGITransport(app=app)
+    async with AsyncClient(transport=transport, base_url="http://test") as c:
+        yield c
