@@ -36,8 +36,10 @@ framework idioms get shown once before being expected.
   `pyproject.toml` + `uv.lock` are committed. No venv to activate by hand.
 - **Framework:** FastAPI with `fastapi dev` for auto-reload — the analogue of app 1's
   `tsx watch`, no build step.
-- **Testing:** `pytest` with `httpx`'s ASGI transport, driving the app in-process
-  with no live server. This is the direct analogue of app 1's supertest setup.
+- **Testing:** `pytest` + `pytest-asyncio` with `httpx.AsyncClient` over an
+  `ASGITransport`, driving the app in-process with no live server. This is the direct
+  analogue of app 1's supertest setup. `asyncio_mode = "auto"` is set in
+  `pyproject.toml`, so async tests need no per-test marker.
 - **Storage:** an in-memory list, as with every app in the curriculum. No database.
 - **Ports:** API on `4002` (the `400N` convention), web on Vite's `5173`. CORS is
   enabled for local dev, as in app 1.
@@ -56,7 +58,8 @@ uv run pytest
 ```
 02-personal-bookshelf/
   api/
-    pyproject.toml       fastapi, uvicorn, pytest, httpx           [Claude]
+    pyproject.toml       fastapi, uvicorn, pytest,
+                         pytest-asyncio, httpx                     [Claude]
     uv.lock                                                        [Claude]
     app/
       __init__.py
@@ -92,8 +95,9 @@ Claude scaffolds:
   two define the shape the frontend was specced against, so they are given rather
   than derived.
 - `routes/books.py` — `GET /api/books` only, as the worked example: router setup,
-  `response_model`, and reading from the data module. It demonstrates the wiring
-  without giving away path params, request bodies, status codes, or error handling.
+  an `async def` handler, `response_model`, and reading from the data module. It
+  demonstrates the wiring without giving away path params, request bodies, status
+  codes, or error handling.
 - The full test suite and its fixtures.
 
 The user implements:
@@ -149,12 +153,27 @@ to null — a real pydantic idiom, where full-replacement is a dict overwrite th
 teaches nothing. And it makes the frontend's inline status-change action a one-field
 `PUT {"status": "read"}` rather than resending an entire book object.
 
+### Decision: handlers are `async def`
+
+Every route handler is `async def`, matching FastAPI's documentation convention and
+what production services look like. Nothing in this app actually awaits — the store is
+an in-memory list — so the `async` is, strictly speaking, unnecessary here.
+
+It is in scope anyway. Learning FastAPI from docs written entirely in `async def`
+while writing `def` is a friction tax on every page read, and the user already knows
+async, so the concept costs nothing to carry. It also sets up the one lesson that does
+bite in production: a blocking call inside an `async def` handler stalls the event
+loop for every concurrent request, where FastAPI would have run a plain `def` handler
+in a threadpool and been fine. The app README names this hazard explicitly, since an
+app with nothing to await cannot demonstrate it.
+
 ## Testing
 
-`tests/conftest.py` provides two fixtures: an `httpx` client bound to the app's ASGI
-transport, and an autouse fixture restoring the seeded books before each test. The
-reset matters because the store is mutable for the first time in this curriculum — a
-`DELETE` test would otherwise poison whatever runs after it.
+`tests/conftest.py` provides two fixtures: an `httpx.AsyncClient` bound to the app's
+ASGI transport, and an autouse fixture restoring the seeded books before each test.
+The reset matters because the store is mutable for the first time in this curriculum —
+a `DELETE` test would otherwise poison whatever runs after it. Tests are `async def`
+and await their requests, mirroring the handlers under test.
 
 `tests/test_books.py` covers, in roughly ten tests:
 
@@ -200,7 +219,8 @@ is tedium, the routing is the lesson.
 **Part 1 — Build the API.** The contract above, what is stubbed versus given, the
 `uv` commands, `uv run pytest` as the gate, and a "Python concepts to practice"
 list: pydantic models and validation, `str` enums, type hints on handlers,
-`HTTPException` and status codes, `response_model`, and `model_dump(exclude_unset=True)`.
+`async def` handlers and when async actually buys anything, `HTTPException` and status
+codes, `response_model`, and `model_dump(exclude_unset=True)`.
 
 **Part 2 — Build the Frontend.** The React assignment above, in the shape app 1's
 README used: goal, functional requirements, API contract reference, React concepts
@@ -215,8 +235,6 @@ which stops being true here.
 - Porting app 1 to FastAPI.
 - Databases or persistence beyond the in-memory list.
 - Auth of any kind — that arrives in app 3, and is fake even there.
-- Async route handlers and async DB drivers. Handlers are plain `def`; concurrency
-  is not one of the concepts this app teaches.
 - Styling frameworks; plain CSS only, per the curriculum spec.
 - Pre-written frontend implementations, and pre-written backend implementations
   beyond the one worked endpoint.
