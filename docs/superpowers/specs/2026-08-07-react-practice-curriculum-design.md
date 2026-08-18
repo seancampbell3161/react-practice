@@ -144,3 +144,17 @@ Each app builds on skills from the previous one (fetching, then CRUD, then compl
 ## Process Going Forward
 
 Each app gets scaffolded as its own implementation-plan cycle (via the writing-plans skill), starting with App 1. After each app is scaffolded, the user builds it in their own time; the next app's plan is only executed when requested, so the curriculum can flex based on what the user wants to focus on next.
+
+## Amendment — 2026-08-17: backend stack change
+
+As of App 2, the backend stack is Python + FastAPI rather than Node + Express +
+TypeScript, and the division of labor changes with it: the user implements most
+of the backend, not just the frontend. The motivation is practicing Python
+alongside React. App 1 is unchanged and stays on Express — rewriting a finished
+app to match a later convention churns working code for consistency's sake.
+
+The "Tooling" and "App 2"/"App 3" sections above describe the original Express
+plan and are superseded for those apps by
+`2026-08-17-personal-bookshelf-fastapi-design.md`. Everything else — the
+curriculum framing, the concept progression, in-memory storage, plain CSS,
+plain `fetch()`, per-app independence — is unaffected.
