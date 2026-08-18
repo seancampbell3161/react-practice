@@ -1,3 +1,4 @@
+from operator import indexOf
 import uuid
 
 from fastapi import APIRouter, status
@@ -50,10 +51,12 @@ async def create_book(req: BookCreate) -> Book:
 @router.put("/{book_id}", response_model=Book)
 async def update_book(book_id: str, req: BookUpdate) -> Book:
     book = None
+    idx = -1
 
-    for b in BOOKS:
+    for i, b in enumerate(BOOKS):
         if b.id == book_id:
             book = b
+            idx = i
 
     if not book:
         raise HTTPException(
@@ -61,15 +64,9 @@ async def update_book(book_id: str, req: BookUpdate) -> Book:
             detail="Book not found"
         )
 
-    if req.title:
-        book.title = req.title
-    if req.author:
-        book.author = req.author
-    if req.status:
-        book.status = req.status
-    if req.rating:
-        book.rating = req.rating
+    update_data = req.model_dump(exclude_unset=True, exclude_none=False)
+    BOOKS[idx] = book.model_copy(update=update_data)
 
-    return book
+    return BOOKS[idx]
         
 #   DELETE /{book_id}   -> 204 with an empty body, or 404
