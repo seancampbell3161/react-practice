@@ -8,7 +8,7 @@ See [`docs/superpowers/specs/2026-08-07-react-practice-curriculum-design.md`](do
 
 | # | App | Focus | Status |
 |---|-----|-------|--------|
-| 1 | [National Parks Explorer](01-national-parks-explorer/) | `useState`, `useEffect`, fetching, list rendering | Ready to build |
+| 1 | [National Parks Explorer](01-national-parks-explorer/) | `useState`, `useEffect`, fetching, list rendering | Complete |
 | 2 | Personal Bookshelf | React Router, forms, CRUD, `useContext` | Planned |
 | 3 | Team Kanban Board | `useReducer`, `useMemo`/`useCallback`, auth patterns | Planned |
 
