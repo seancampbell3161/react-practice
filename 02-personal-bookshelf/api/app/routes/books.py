@@ -4,7 +4,7 @@ from fastapi import APIRouter, status
 from fastapi.exceptions import HTTPException
 
 from app.data import BOOKS
-from app.models import Book, BookCreate
+from app.models import Book, BookCreate, BookUpdate
 
 router = APIRouter()
 
@@ -21,8 +21,6 @@ async def list_books() -> list[Book]:
     return BOOKS
 
 
-# Implement the other four endpoints:
-#
 #   GET    /{book_id}   -> 200 Book, or 404
 @router.get("/{book_id}", response_model=Book)
 async def get_book(book_id: str) -> Book:
@@ -38,8 +36,40 @@ async def get_book(book_id: str) -> Book:
 #   POST   ""           -> 201 Book, id generated server-side
 @router.post("", response_model=Book, status_code=status.HTTP_201_CREATED)
 async def create_book(req: BookCreate) -> Book:
+    if req.rating and  req.rating > 5:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+            detail=f"Rating of {req.rating} is not valid"
+        )
     new_book = Book(id=uuid.uuid4().hex, title=req.title, author=req.author, status=req.status, rating=req.rating)
+
+    BOOKS.append(new_book)
 
     return new_book
 #   PUT    /{book_id}   -> 200 Book, applying only the fields that were sent
+@router.put("/{book_id}", response_model=Book)
+async def update_book(book_id: str, req: BookUpdate) -> Book:
+    book = None
+
+    for b in BOOKS:
+        if b.id == book_id:
+            book = b
+
+    if not book:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Book not found"
+        )
+
+    if req.title:
+        book.title = req.title
+    if req.author:
+        book.author = req.author
+    if req.status:
+        book.status = req.status
+    if req.rating:
+        book.rating = req.rating
+
+    return book
+        
 #   DELETE /{book_id}   -> 204 with an empty body, or 404
