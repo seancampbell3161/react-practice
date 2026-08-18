@@ -1,4 +1,3 @@
-from operator import indexOf
 import uuid
 
 from fastapi import APIRouter, status
@@ -68,5 +67,21 @@ async def update_book(book_id: str, req: BookUpdate) -> Book:
     BOOKS[idx] = book.model_copy(update=update_data)
 
     return BOOKS[idx]
+
         
 #   DELETE /{book_id}   -> 204 with an empty body, or 404
+@router.delete("/{book_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_book(book_id: str) -> None:
+    book = None
+
+    for b in BOOKS:
+        if b.id == book_id:
+            book = b
+
+    if not book:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Book not found"
+        )
+
+    BOOKS.remove(book)
