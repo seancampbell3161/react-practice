@@ -1,16 +1,16 @@
 # React Practice
 
-A collection of small, self-contained full-stack apps for practicing React. Each app has an Express + TypeScript API already built and a bare Vite + React + TypeScript frontend shell — you build the actual React app on top of it.
+A collection of small, self-contained full-stack apps for practicing React and backend API development. App 1 ships with a pre-built Express API so the focus stays purely on the frontend. From app 2 on, the backend is Python + FastAPI and building it is part of the assignment, not just the React app on top of it.
 
-See [`docs/superpowers/specs/2026-08-07-react-practice-curriculum-design.md`](docs/superpowers/specs/2026-08-07-react-practice-curriculum-design.md) for the full curriculum design.
+See [`docs/superpowers/specs/2026-08-07-react-practice-curriculum-design.md`](docs/superpowers/specs/2026-08-07-react-practice-curriculum-design.md) for the full curriculum design, and its [2026-08-17 amendment](docs/superpowers/specs/2026-08-07-react-practice-curriculum-design.md#amendment--2026-08-17-backend-stack-change) for why the stack changed.
 
 ## Apps
 
-| # | App | Focus | Status |
-|---|-----|-------|--------|
-| 1 | [National Parks Explorer](01-national-parks-explorer/) | `useState`, `useEffect`, fetching, list rendering | Complete |
-| 2 | [Personal Bookshelf](02-personal-bookshelf/) | React Router, forms, CRUD, `useContext` | Ready to build |
-| 3 | Team Kanban Board | `useReducer`, `useMemo`/`useCallback`, auth patterns | Planned |
+| # | App | Backend | Focus | Status |
+|---|-----|---------|-------|--------|
+| 1 | [National Parks Explorer](01-national-parks-explorer/) | Express (built for you) | `useState`, `useEffect`, fetching, list rendering | Complete |
+| 2 | [Personal Bookshelf](02-personal-bookshelf/) | FastAPI (you build it) | pydantic models, CRUD, React Router, forms, `useContext` | Ready to build |
+| 3 | Team Kanban Board | FastAPI (you build it) | `useReducer`, `useMemo`/`useCallback`, auth patterns | Planned |
 
 ## Running an app
 
