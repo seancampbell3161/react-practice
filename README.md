@@ -1,4 +1,4 @@
-# React Practice
+# Project Practice
 
 A collection of small, self-contained full-stack apps for practicing React and backend API development. App 1 ships with a pre-built Express API so the focus stays purely on the frontend. From app 2 on, the backend is Python + FastAPI and building it is part of the assignment, not just the React app on top of it.
 
