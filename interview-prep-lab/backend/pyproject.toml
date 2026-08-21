@@ -1,0 +1,50 @@
+[project]
+name = "lab-backend"
+version = "0.1.0"
+description = "Interview prep lab bench — FastAPI + async SQLAlchemy + Postgres"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi[standard]>=0.115",
+    "sqlalchemy[asyncio]>=2.0.36",
+    "asyncpg>=0.30",
+    "alembic>=1.14",
+    "pydantic-settings>=2.6",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3",
+    "pytest-asyncio>=0.24",
+    "httpx>=0.28",
+    "ruff>=0.8",
+    "mypy>=1.13",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "ASYNC"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+# SQLAlchemy 2.0 ships its own plugin-free typing; these keep the strictness
+# useful without drowning in stub noise from third-party packages.
+warn_unused_ignores = true
+disallow_untyped_decorators = false
+[[tool.mypy.overrides]]
+# asyncpg ships no py.typed; alembic's generated revisions are not app code.
+module = ["alembic.*", "asyncpg.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+# "auto" treats every `async def test_` as an asyncio test, so individual
+# tests need no @pytest.mark.asyncio decorator.
+asyncio_mode = "auto"
+# One event loop for the whole session: the session-scoped engine and the
+# per-test connections have to live on the same loop.
+asyncio_default_fixture_loop_scope = "session"
+asyncio_default_test_loop_scope = "session"
+pythonpath = ["."]

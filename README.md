@@ -12,6 +12,15 @@ See [`docs/superpowers/specs/2026-08-07-react-practice-curriculum-design.md`](do
 | 2 | [Personal Bookshelf](02-personal-bookshelf/) | FastAPI (you build it) | pydantic models, CRUD, React Router, forms, `useContext` | Ready to build |
 | 3 | Team Kanban Board | FastAPI (you build it) | `useReducer`, `useMemo`/`useCallback`, auth patterns | Planned |
 
+## Interview prep lab
+
+Separate from the numbered curriculum: [`interview-prep-lab/`](interview-prep-lab/)
+is a lab bench rather than an app. Every failure mode from the backend/frontend
+study guide exists there as a `# BUG:` / `# FIX:` pair you can toggle and measure
+— N+1 queries, cross-tenant reads, a blocking event loop, lost updates. Stack is
+FastAPI + async SQLAlchemy + Postgres + React 18. See its
+[`TOUR.md`](interview-prep-lab/TOUR.md) for the index.
+
 ## Running an app
 
 Each app has an independent API and frontend, run in separate terminals from

@@ -1,0 +1,43 @@
+# Postgres 16 + Redis 7 for the lab bench.
+#
+# Host ports are deliberately non-default (5435 / 6380) so this stack never
+# fights a Postgres or Redis you already run locally. Inside the compose
+# network the services still listen on their standard ports.
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: lab-db
+    environment:
+      POSTGRES_USER: lab
+      POSTGRES_PASSWORD: lab
+      POSTGRES_DB: lab
+    ports:
+      - "5435:5432"
+    volumes:
+      - lab-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      # -U/-d matter: without them pg_isready probes the "root" role and the
+      # container reports healthy before the app database actually exists.
+      test: ["CMD-SHELL", "pg_isready -U lab -d lab"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+      start_period: 5s
+
+  redis:
+    image: redis:7-alpine
+    container_name: lab-redis
+    ports:
+      - "6380:6379"
+    volumes:
+      - lab-redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+      start_period: 2s
+
+volumes:
+  lab-pgdata:
+  lab-redisdata:
